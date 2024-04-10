@@ -1,0 +1,1 @@
+Static and Fluctuating Load Analysis of a Cantilever Beam with load as input (axial, tip load and torsion). The code presented in this project provides a comprehensive analysis of a cantilever beam under static and fluctuating.
