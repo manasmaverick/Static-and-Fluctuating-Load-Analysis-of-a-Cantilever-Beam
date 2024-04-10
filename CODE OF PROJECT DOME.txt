@@ -1,0 +1,499 @@
+#include<bits/stdc++.h>
+using namespace std;
+void endurance(double ka,double kb,int sut,double &se)
+{
+    double se_prime;
+    if(sut<=1400000000)
+    {
+        se_prime = 0.5*sut;
+    }
+    else{
+        se_prime = 700000000;
+    }
+
+    se = ka*kb*se_prime;
+}
+void kaa(int m,int Sut,double &ka){
+    
+    double a,b;
+    if(m ==1 || m == 11){
+        a=57.7;
+        b=-0.718;
+        ka = a*pow(Sut*0.000001,b);
+    }
+    else if(m == 2 || (m==7 || m==12)){
+        a=4.51;
+        b=-0.265;
+        ka= a*pow(Sut*0.000001,b);
+    }
+    else{
+        ka = 1;
+        
+    }
+    
+    
+}
+
+void kb_circle(double d,double &kb){
+    double x=2*d*1000;
+    
+    if(x>=2.79 && x<=51){
+     
+      kb= (1.24*pow(x,-0.107));
+    }
+    else if(x>51 && x<=254){
+        kb=(1.51*pow(x,-0.157));
+    }
+    else{
+        kb=1;
+    }
+  
+    
+}
+void kb_rect1(double &kb,double height,double width){
+    double x=0.808*1000*pow(height*width,0.5);
+    
+    if(x>=2.79 && x<=51){
+     
+      kb= (1.24*pow(x,-0.107));
+    }
+    else if(x>51 && x<=254){
+        kb=(1.51*pow(x,-0.157));
+    }
+    
+    
+
+    
+    
+    
+}
+void material(int m,int &sut, int &sy)
+{
+    
+    if(m==1)
+    {
+        sut =380000000 ;sy =210000000  ;
+    }
+    if(m==2)
+    {
+        sut =470000000 ;sy =390000000  ;
+    }
+    if(m==3)
+    {
+        sut =758000000 ;sy =552000000  ;
+    }
+    if(m==4)
+    {
+        sut =1250000000 ;sy =1140000000  ;
+    }
+    if(m==5)
+    {
+        sut =482000000 ;sy = 345000000 ;
+    }
+    if(m==6)
+    {
+        sut =900000000 ;sy =830000000  ;
+    }
+    if(m==7)
+    {
+        sut = 330000000;sy =280000000  ;
+    }
+    if(m==8)
+    {
+        sut = 601000000;sy =241000000  ;
+    }
+    if(m==9)
+    {
+        sut = 44600000;sy =296000000  ;
+    }
+    if(m==11)
+    {
+        sut =300000000 ;sy =170000000  ;
+    }
+    if(m==12)
+    {
+        sut =330000000 ;sy =280000000  ;
+    }
+
+
+    
+}
+void fraction(double sut,double &f){
+    //Sut in pa
+    double sigmaf_dash=(sut/1000000)+ 345;
+    double b = -1*(log10(sigmaf_dash*2/(sut/1000000))/log10(2*1000000));
+    f=(sigmaf_dash/(sut/1000000))*pow(2000,b);
+    
+}
+void static_loading(int sut,int sy)
+{
+    const double pi = 3.14159265358979323846;
+    double a1,force;
+    double fac;
+
+    cout<<"ENTER FACTOR OF DESIGN";
+    cin>>fac;
+
+    cout<<"ENTER THE CROSS SECTION OF BEAM YOU WANT 1.CIRCULAR,2.RECTANGLE"<<endl;
+    cin>>a1;
+
+    cout<<"ENETR VALUE OF TIP FORCE IN NEWTON"<<endl;
+    cin>>force;
+
+    cout<<"ENETR VALUE OF AXIAL FORCE IN NEWTON"<<endl;
+    double f1;cin>>f1;
+
+    double t;
+    cout<<"ENETR VALUE OF TORSION MOMENT IN NEWTON-METRE"<<endl;
+    cin>>t;
+
+    double tau,netmoment;
+    
+    if(a1==1)
+    {
+        double r,l,netm;
+
+        cout<<"ENTER THE RADIUS OF CROSS SECTION "<<endl;
+        cin>>r;
+
+        cout<<"ENTER THE LENGTH OF BEAM "<<endl;
+        cin>>l;
+
+        double i =  (pi* r*r*r*r*0.25);
+        double m1 = ((force*l*r)/i);
+        double m2 = (f1/(pi*r*r));
+        tau = ((t*2)/(pi*r*r*r));//FOR TORSION
+
+
+        //FOR TENSILE OR COMRESSION MOMENT
+        if(m1>0 && m2>0)
+        {
+            netm = m1+ m2;//top element
+        }
+        if(m1>0 && m2<0)
+        {
+            netm = m1-m2;//bottom element
+        }
+        if(m1<0 && m2>0)
+        {
+            netm = m2-m1;//bottom element
+        }
+        if((m1<0 && m2<0))
+        {
+            netm = m1 + m2;//top element 
+        }
+        netmoment = abs(netm);
+        
+        
+    }
+    if(a1==2)
+    {
+        double h,w,l,netm;
+
+        cout<<"ENTER THE HEIGHT AND WIDTH OF CROSS SECTION "<<endl;
+        cin>>h>>w;
+
+        cout<<"ENTER THE LENGTH OF BEAM "<<endl;
+        cin>>l;
+
+        double i1 =  ((h*h*h*w)/12);
+        double m1 = ((force*l*0.5*h)/i1); 
+        double m2 = (f1/(h*w));
+        double i2 = ((h*h*h*w)/12) + ((w*w*w*h)/12) ;
+        tau = ((t*h)/(2*i2));//FOR TORSION
+
+        //FOR TENSILE OR COMRESSION MOMENT
+        if(m1>0 && m2>0)
+        {
+            netm = m1+ m2;//top element
+        }
+        if(m1>0 && m2<0)
+        {
+            netm = m1-m2;//bottom element
+        }
+        if(m1<0 && m2>0)
+        {
+            netm = m2-m1;//bottom element
+        }
+        if((m1<0 && m2<0))
+        {
+            netm = m1 + m2;//top element 
+        }
+        netmoment = abs(netm);
+    }
+    //cout<<tau<<endl;
+    //cout<<netmoment<<endl;
+    // USING VON MISES CRITERIA
+    double a = 2*(netmoment*netmoment) + (6*tau*tau); 
+    double sigma_prime =  pow(a,0.5);
+    //cout<<sigma_prime<<endl;
+    //cout<<sy<<endl;
+    if(sigma_prime<(1.41421356237 * sy/fac))
+    {
+        cout<<"IT DOENT FAIL UNDER VON MISES CRITERIA"<<endl;
+    }
+    else
+    cout<<"IT FAILs UNDER VON MISES CRITERIA"<<endl;
+
+}
+
+void fluctuating_loading(int sut,int sy,double f,int m)
+{
+    const double pi = 3.14159265358979323846;
+
+    double a;
+    double fac;
+
+    //cout<<"ENTER FACTOR OF DESIGN";
+    //cin>>fac;
+    cout<<"ENTER THE CROSS SECTION OF BEAM YOU WANT 1.CIRCULAR,2.RECTANGLE"<<endl;
+    cin>>a;
+    if(a==1)//for circle
+    {
+
+    cout<<"ENTER THE RADIUS OF CROSS SECTION "<<endl;double r1;
+    cin>>r1;
+
+    cout<<"ENTER THE LENGTH OF BEAM "<<endl;double l;
+    cin>>l;
+
+    cout<<"ENETR MAXIMUM VALUE AND MINIMUM VALUE OF TIP FORCE IN NEWTON"<<endl;
+    double b1,b2;cin>>b1>>b2;
+
+    cout<<"ENETR MAXIMUM VALUE AND MINIMUM VALUE OF AXIAL FORCE IN NEWTON"<<endl;
+    double f1,f2;cin>>f1>>f2;
+
+    double t1,t2;
+    cout<<"ENETR MAXIMUM VALUE AND MINIMUM VALUE OF TORSION MOMENT IN NEWTON-METRE"<<endl;
+    cin>>t1>>t2;
+
+
+    //se is endurance 
+    double i =  (pi* r1*r1*r1*r1*0.25);
+    b1 =((b1*l*r1)/i) ;b2= ((b2*l*r1)/i);f1= (f1/(pi*r1*r1)); f2=(f2/(pi*r1*r1)); ; t1= (t1*2)/(pi*r1*r1*r1);t2=(t2*2)/(pi*r1*r1*r1);
+
+
+    double ba,bm,taua,taum,axiala,axialm;
+    bm = abs((0.5*b1) + (0.5*b2));ba=abs((0.5*b1) - (0.5*b2));
+    axialm = abs((0.5*f1) + (0.5*f2));axiala=abs((0.5*f1) - (0.5*f2));
+    taum = abs((0.5*t1) + (0.5*t2));taua=abs((0.5*t1) - (0.5*t2));
+
+
+    //von mises criterian
+    
+
+    double sig_a_prime,sig_m_prime;
+    sig_a_prime = ((ba+(axiala/0.85))*(ba+(axiala/0.85)) + (3*taua*taua));
+    sig_a_prime = pow(sig_a_prime,0.5);
+    sig_m_prime = ((bm+(axialm/0.85))*(bm+(axialm/0.85)) + (3*taum*taum));
+    sig_m_prime = pow(sig_m_prime,0.5);
+
+
+    
+    double ka;double kb;double se=0;
+    kaa(m,sut,ka);
+    kb_circle(r1,kb);
+    endurance(ka,kb,sut,se);
+
+    
+    double r_cric1 = (se/sut)*(sut-sy)/(sy-se);//for infinite life
+    double r = sig_a_prime/sig_m_prime;
+
+    if(r_cric1<r)
+    {
+        
+        
+        double nf;
+        nf = (se*sut)/(sut*sig_a_prime + sig_m_prime * se);
+        if(nf>1)
+        {
+            cout<<"IT HAS A FATIGUE (infinite cycles) FACTOR OF SAFTEY OF VALUE EQUAL TO->"<<nf<<endl;
+
+        }
+        else
+        {
+            double sig_rev = sut * sig_a_prime/(sut-sig_m_prime);
+            double f_sut = f*sut;
+            int no_of_cycles;
+
+            if(sig_rev<sut  && sig_rev >= f_sut)
+            {
+                double slope = (f_sut - sut)/999;
+                no_of_cycles = abs((sig_rev-sut)/slope +1);
+                cout<<"IT HAS A FINITE NO OF CYCLES(low cycle fatigue) AND NO OF CYCLE IS ->"<<no_of_cycles<<endl;//low cycle fatigue
+
+
+            }
+            else{
+                double a = f*f*sut*sut/se;
+                double one_by_b = (-3)/ (log10(f_sut/se));
+                double e = sig_rev/a;
+
+                no_of_cycles = pow(e,one_by_b);
+                cout<<"IT HAS A FINITE NO OF CYCLES(high cycle fatigue) AND NO OF CYCLE IS ->"<<no_of_cycles<<endl;
+            }
+
+        }
+    }
+    else
+    {        
+        double nf = sy/(sig_a_prime+sig_m_prime);
+        if(nf<1)
+        cout<<"IT WILL FAIL DUE TO YIELDING";
+        else
+        {
+        cout<<"IT HAS A YIELDING FACTOR OF SAFTEY OF VALUE EQUAL TO->"<<nf<<endl;
+
+        }    
+    }
+    }
+    else//for rectangle
+    {
+    double h,w,l,netm;
+
+    cout<<"ENTER THE HEIGHT AND WIDTH OF CROSS SECTION "<<endl;
+    cin>>h>>w;
+
+    cout<<"ENTER THE LENGTH OF BEAM "<<endl;
+    cin>>l;
+
+    cout<<"ENETR MAXIMUM VALUE AND MINIMUM VALUE OF TIP FORCE IN NEWTON"<<endl;
+    double b1,b2;cin>>b1>>b2;
+
+    cout<<"ENETR MAXIMUM VALUE AND MINIMUM VALUE OF AXIAL FORCE IN NEWTON"<<endl;
+    double f1,f2;cin>>f1>>f2;
+
+    double t1,t2;
+    cout<<"ENETR MAXIMUM VALUE AND MINIMUM VALUE OF TORSION MOMENT IN NEWTON-METRE"<<endl;
+    cin>>t1>>t2;
+    //se is endurance 
+
+    double i1 =  ((h*h*h*w)/12);
+    double i2 = ((h*h*h*w)/12) + ((w*w*w*h)/12) ;
+    b1 =((b1*l*0.5*h)/i1) ;b2= ((b2*l*0.5*h)/i1);f1= (f1/(h*w)); f2=(f2/(h*w)); ; t1= ((t1*h)/(2*i2));t2=((t2*h)/(2*i2));
+
+
+    double ba,bm,taua,taum,axiala,axialm;
+
+
+    bm = abs((0.5*b1) + (0.5*b2));ba=abs((0.5*b1) - (0.5*b2));
+    axialm = abs((0.5*f1) + (0.5*f2));axiala=abs((0.5*f1) - (0.5*f2));
+    taum = abs((0.5*t1) + (0.5*t2));taua=abs((0.5*t1) - (0.5*t2));
+
+    //von mises criterian 
+
+
+    double sig_a_prime,sig_m_prime;
+
+
+    sig_a_prime = ((ba+(axiala/0.85))*(ba+(axiala/0.85)) + (3*taua*taua));
+    sig_a_prime = pow(sig_a_prime,0.5);
+    sig_m_prime = ((bm+(axialm/0.85))*(bm+(axialm/0.85)) + (3*taum*taum));
+    sig_m_prime = pow(sig_m_prime,0.5);
+
+
+    double ka;double kb;double se=0;
+    kaa(m,sut,ka);
+    kb_rect1(kb,h,w);
+    endurance(ka,kb,sut,se);
+
+
+    double r_cric1 = (se/sut)*(sut-sy)/(sy-se);//for infinite life
+    double r = sig_a_prime/sig_m_prime;
+
+
+    if(r_cric1<r)
+    {
+        double nf;
+        nf = (se*sut)/(sut*sig_a_prime + sig_m_prime * se);
+        if(nf>1)
+        {
+            cout<<"IT HAS A FATIGUE (infinite cycles) FACTOR OF SAFTEY OF VALUE EQUAL TO->"<<nf<<endl;
+
+        }
+        else
+        {
+            double sig_rev = sut * sig_a_prime/(sut-sig_m_prime);
+            double f_sut = f*sut;
+            double no_of_cycles;
+            if(sig_rev<sut  && sig_rev >= f_sut)
+            {
+                double slope = (f_sut - sut)/999;
+                no_of_cycles = abs((sig_rev-sut)/slope +1);
+                cout<<"IT HAS A FINITE NO OF CYCLES(low cycle fatigue) AND NO OF CYCLE IS ->"<<no_of_cycles<<endl;//low cycle fatigue
+
+
+            }
+            else{
+
+                double a = f*f*sut*sut/se;
+                double one_by_b = (-3)/ (log10(f_sut/se));
+                double e = sig_rev/a;
+
+                no_of_cycles = pow(e,one_by_b);
+                cout<<"IT HAS A FINITE NO OF CYCLES(high cycle fatigue) AND NO OF CYCLE IS ->"<<no_of_cycles<<endl;
+            }
+
+        }
+    }
+    else
+    {        
+        double nf = sy/(sig_a_prime+sig_m_prime);
+        if(nf<1)
+        cout<<"IT WILL FAIL DUE TO YIELDING";
+        
+        else
+        {
+        cout<<"IT HAS A YIELDING FACTOR OF SAFTEY OF VALUE EQUAL TO->"<<nf<<endl;
+
+        }    
+    }
+
+    }
+
+
+}
+
+
+int main()
+{
+    const double pi = 3.14159265358979323846;
+
+    cout<<"CHOOSE YOUR MATERIAL"<<endl;
+    cout<<"1.1020 HR STEEL"<<endl;
+    cout<<"2.1020 CD STEEL"<<endl;
+    cout<<"3.1040 Q&T@ 800F "<<endl;
+    cout<<"4.4140 Q&T@ 800F"<<endl;
+    cout<<"5.WROUGHT AL 2024"<<endl;
+    cout<<"6.TITANIUM ALLOY(TI-6AL-4V)"<<endl;
+    cout<<"7.AISI 1006 CD STEEL"<<endl;
+    cout<<"8.303 STAINLESS STEEL ANNEALED"<<endl;
+    cout<<"9.2024 ALUMINIUM ALLOY T4"<<endl;
+    cout<<"10.7075 ALUMINIUM ALLOY T4"<<endl;
+    cout<<"11.1006 HR STEEL"<<endl;
+    cout<<"12.1006 CD STEEL"<<endl;
+
+    int m;
+    cin>>m;
+
+    int sut=0; int sy=0;
+    material(m,sut,sy);
+
+    cout<<"YOU HAVE 1.FLUCTUATING LOADING OR 2.STATIC LOADING "<<endl;
+    int b;
+    cin>>b;
+
+    double se=0;double f = 0;
+    double ka,kb;
+
+    endurance( ka, kb, sut, se);
+
+    if(b==2)
+    static_loading(sut,sy);
+    else
+    fluctuating_loading(sut,sy,f,m);
+    
+    
+    
+    return 0;
+}
